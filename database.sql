@@ -9,8 +9,6 @@
 CREATE TABLE "user"
 (
     "id" SERIAL PRIMARY KEY,
-    "first_name" VARCHAR (15) NOT NULL,
-    "last_name" VARCHAR (15) NOT NULL,
     "username" VARCHAR (80) UNIQUE NOT NULL,
     "password" VARCHAR (1000) NOT NULL
 );
