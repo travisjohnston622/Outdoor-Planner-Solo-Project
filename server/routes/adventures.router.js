@@ -18,12 +18,12 @@ router.get('/adventures', (req, res) => {
 
 
 //POST route for new adventures
-router.post('/', (req, res) => {
+router.post('/adventures', (req, res) => {
 
 });
 
 // PUT route for updating past adventures
-router.put('adventures/:id', (req, res) => {
+router.put('/adventures/:id', (req, res) => {
 
 });
 
@@ -36,9 +36,8 @@ router.delete('/adventures/:id', (req, res) => {
 router.get('/adventures/:id', (req, res) => {
     const routeId = req.params.id;
 
-    const queryString = `SELECT "routes".route_name FROM "routes"
-    JOIN "movies_genres" ON "movies".id = "movies_genres".movies_id
-    JOIN "genres" ON "movies_genres".genres_id = "genres".id
+    const queryString = `SELECT "routes".route_name, "routes".id FROM "routes"
+    JOIN "route_points" ON "routes".id = "route_points".routes_id
     WHERE "routes".id =${routeId};`;
 
     pool.query(queryString)
