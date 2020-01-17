@@ -67,6 +67,13 @@ class App extends Component {
             they will be redirected to the authRedirect path provided. */}
             <ProtectedRoute
               exact
+              path="/newadvent"
+              component={InfoPage}
+            />
+            {/* This works the same as the other protected route, except that if the user is logged in,
+            they will be redirected to the authRedirect path provided. */}
+            <ProtectedRoute
+              exact
               path="/login"
               authRedirect="/admin"
               component={LoginPage}
