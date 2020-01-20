@@ -19,8 +19,10 @@ import InfoPage from '../InfoPage/InfoPage';
 import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
+// import NewAdventurePage from '../NewAdventurePage/NewAdventurePage';
 
 import './App.css';
+import mapStoreToProps from '../../redux/mapStoreToProps';
 
 class App extends Component {
   componentDidMount () {
@@ -65,11 +67,11 @@ class App extends Component {
             />
             {/* This works the same as the other protected route, except that if the user is logged in,
             they will be redirected to the authRedirect path provided. */}
-            <ProtectedRoute
+            {/* <ProtectedRoute
               exact
-              path="/newadvent"
-              component={InfoPage}
-            />
+              path="/new"
+              component={NewAdventurePage}
+            /> */}
             {/* This works the same as the other protected route, except that if the user is logged in,
             they will be redirected to the authRedirect path provided. */}
             <ProtectedRoute
@@ -94,4 +96,4 @@ class App extends Component {
   )}
 }
 
-export default connect()(App);
+export default connect(mapStoreToProps)(App);
