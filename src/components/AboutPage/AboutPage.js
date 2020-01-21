@@ -1,6 +1,8 @@
 import React, { Component }from 'react';
 import { connect } from 'react-redux';
 import mapStoreToProps from '../../redux/mapStoreToProps';
+import MapBox from '../MapBox/MapBox';
+
 
 // This is one of our simplest components
 // It doesn't have local state, so it can be a function component.
@@ -39,7 +41,7 @@ class AboutPage extends Component {
 
         <div>
           <p>
-            This about page is for anyone to read!
+            <MapBox />
           </p>
         </div>
       </div>
