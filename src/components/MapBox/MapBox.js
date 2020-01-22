@@ -3,6 +3,7 @@ import ReactMapGL from "react-map-gl";
 import { Editor, EditorModes } from 'react-map-gl-draw';
 import { connect } from 'react-redux';
 import mapStoreToProps from '../../redux/mapStoreToProps';
+import CustomMarker from '../CustomMarker/CustomMarker';
 
 const MAPBOX_TOKEN = process.env.REACT_APP_PUBLIC_MAPBOX_TOKEN;
 
@@ -28,7 +29,8 @@ class MapBox extends Component {
         // Default Map
         viewport: DEFAULT_VIEWPORT,
         // Editor
-        selectedMode: EditorModes.READ_ONLY
+        selectedMode: EditorModes.READ_ONLY,
+        markerArray: []
     };
     
     _switchMode = event => {
@@ -50,7 +52,15 @@ class MapBox extends Component {
         console.log(event.lngLat);
         console.log('lng: ', event.lngLat[0]);
         console.log('lat: ', event.lngLat[1]);
+        this.setState({
+            markerArray: [
+                ...this.state.markerArray,
+                [event.lngLat[0], event.lngLat[1]]
+            ]
+        })
     }
+
+    // markerArray: [[1,2], [2,3], [4,2]]
 
     forceUpdate() {
         this.props.dispatch({ type: "FORCE_MAP_UPDATE_ENFORCED"});
@@ -79,6 +89,11 @@ class MapBox extends Component {
             this.forceUpdate();
         }
         const { viewport, selectedMode } = this.state;
+
+        const markerArray = this.state.markerArray.map((item, index) => {
+            return <CustomMarker key={index} lng={item[0]} lat={item[1]} waypoint={index} />
+        })
+
         return (
             <ReactMapGL
                 {...viewport}
@@ -93,7 +108,8 @@ class MapBox extends Component {
                     clickRadius={12}
                     mode={selectedMode}
                 />
-                {/* {this._renderToolbar()} */}
+                {this._renderToolbar()}
+                {markerArray}
             </ReactMapGL>    
         );
     }
