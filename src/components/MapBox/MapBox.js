@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactMapGL, { Layer } from 'react-map-gl';
-// import ReactMapGL from 'react-map-gl';
 import { Editor, EditorModes } from 'react-map-gl-draw';
 import { connect } from 'react-redux';
 import mapStoreToProps from '../../redux/mapStoreToProps';
@@ -9,13 +8,7 @@ import CustomMarker from '../CustomMarker/CustomMarker';
 
 const MAPBOX_TOKEN = process.env.REACT_APP_PUBLIC_MAPBOX_TOKEN;
 
-const MODES = [
-    { id: EditorModes.EDITING, text: 'Select and Edit Feature' },
-    { id: EditorModes.DRAW_POINT, text: 'Draw Point' },
-    { id: EditorModes.DRAW_PATH, text: 'Draw Polyline' },
-    { id: EditorModes.DRAW_POLYGON, text: 'Draw Polygon' },
-    { id: EditorModes.DRAW_RECTANGLE, text: 'Draw Rectangle' }
-];
+
 
 const DEFAULT_VIEWPORT = {
     width: 800,
@@ -44,8 +37,8 @@ const ROUTE_LAYER_CONFIG = {
         'line-cap': 'round'
     },
     'paint': {
-        'line-color': '#888',
-        'line-width': 8
+        'line-color': "red",
+        'line-width': 16
     }
 };
 
@@ -61,12 +54,7 @@ class MapBox extends Component {
         // isDrawing: false,
     };
     
-    _switchMode = event => {
-        const selectedMode = event.target.id;
-        this.setState({
-            selectedMode: selectedMode === this.state.selectedMode ? null : selectedMode
-        });
-    };
+
     
     viewportChange = change => {
         this.setState({
@@ -76,7 +64,7 @@ class MapBox extends Component {
         });
     };
 
-
+// function for editing the map with routes and plot_points
     clickMap = event => {
         console.log(event.lngLat);
         console.log('lng: ', event.lngLat[0]);
@@ -98,9 +86,9 @@ class MapBox extends Component {
             })
         }
     }
-
     // markerArray: [[1,2], [2,3], [4,2]]
 
+    //updates the map after each time the user edits it
     forceUpdate() {
         this.props.dispatch({ type: "FORCE_MAP_UPDATE_ENFORCED"});
         this.setState({
@@ -112,16 +100,6 @@ class MapBox extends Component {
         });
     }
 
-    _renderToolbar = () => {
-        return (
-            <div style={{ top: 0, right: 0, maxWidth: '320px' }}>
-                <select onChange={this._switchMode}>
-                    <option value="">--Please choose a mode--</option>
-                    {MODES.map(mode => <option value={mode.id}>{mode.text}</option>)}
-                </select>
-            </div>
-        );
-    };
 
     clickToDraw = (event) => {
         this.setState({
@@ -135,6 +113,7 @@ class MapBox extends Component {
         });
     };
 
+    //function for overlaying routes and plot_points on the map
     makeRouteLayer() {
         const newRouteSettings = {
             ...ROUTE_LAYER_CONFIG,
@@ -144,6 +123,7 @@ class MapBox extends Component {
         ];
         return newRouteSettings;
     }
+   
 
 
     
@@ -165,9 +145,9 @@ class MapBox extends Component {
                 </div>
                 <ReactMapGL
                     {...viewport}
-                    width="50vw"
-                    height="50vh"
-                    mapStyle="mapbox://styles/mapbox/dark-v9"
+                    width="100vw"
+                    height="100vh"
+                    mapStyle="mapbox://styles/mapbox/satellite-streets-v10"
                     onViewportChange={this.viewportChange}
                     mapboxApiAccessToken={MAPBOX_TOKEN}
                     onClick={this.clickMap}
