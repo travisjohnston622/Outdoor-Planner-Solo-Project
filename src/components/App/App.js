@@ -5,11 +5,9 @@ import {
   Redirect,
   Switch,
 } from 'react-router-dom';
-
 import {connect} from 'react-redux';
 
 import Nav from '../Nav/Nav';
-import Footer from '../Footer/Footer';
 
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute'
 
@@ -19,7 +17,7 @@ import InfoPage from '../InfoPage/InfoPage';
 import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
-// import NewAdventurePage from '../NewAdventurePage/NewAdventurePage';
+import NewAdventurePage from '../NewAdventurePage/NewAdventurePage';
 
 import './App.css';
 import mapStoreToProps from '../../redux/mapStoreToProps';
@@ -67,11 +65,11 @@ class App extends Component {
             />
             {/* This works the same as the other protected route, except that if the user is logged in,
             they will be redirected to the authRedirect path provided. */}
-            {/* <ProtectedRoute
+            <ProtectedRoute
               exact
-              path="/new"
+              path="/new-adventure"
               component={NewAdventurePage}
-            /> */}
+            />
             {/* This works the same as the other protected route, except that if the user is logged in,
             they will be redirected to the authRedirect path provided. */}
             <ProtectedRoute
@@ -90,7 +88,6 @@ class App extends Component {
             {/* If none of the other routes matched, we will show a 404. */}
             <Route render={() => <h1>404</h1>} />
           </Switch>
-          <Footer />
         </div>
       </Router>
   )}

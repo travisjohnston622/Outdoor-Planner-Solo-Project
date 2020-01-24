@@ -1,53 +1,21 @@
-import React, { Component }from 'react';
-import { connect } from 'react-redux';
-import mapStoreToProps from '../../redux/mapStoreToProps';
-import MapBox from '../MapBox/MapBox';
-
-
+import React from 'react';
 // This is one of our simplest components
 // It doesn't have local state, so it can be a function component.
 // It doesn't dispatch any redux actions or display any part of redux state
 // or even care what the redux state is, so it doesn't need 'connect()'
 
-class AboutPage extends Component {
+const AboutPage = () => (
+  <div>
+    <div>
+      <p>
+        Outdoor Planner is a web application that helps you plan your next outdoor adventure. 
+        Outdoor Planner allows registered users to be able to view a map of the area they want to explore via the map functionality. 
+        Users can plot their intended course on the map, and also make notes on their intended course and the area itself. 
+        Users do this so the next time they are planning on enjoying the great outdoors, 
+        they have an application where they can leave notes about highlights and concerns.
+      </p>
+    </div>
+  </div>
+);
 
-  onChange = key => event => {
-    this.setState(
-      {
-        ...this.state,
-        [key]: event.target.value
-      },
-      () => {
-        console.log(this.state);
-      }
-    );
-  };
-
-  search = event => {
-    this.props.dispatch({
-      type:"FETCH_OPEN_CAGE", 
-      payload: {search_string: this.state.search_string}
-    });
-  };
-
-  render() {
-    return(
-  
-      <div>
-        <div>
-          <input type="text" onChange={this.onChange('search_string')}></input>
-          <button onClick={this.search}>SEARCH</button>
-        </div>
-
-        <div>
-          <p>
-            <MapBox />
-          </p>
-        </div>
-      </div>
-    );
-  }
-}
-  
-
-export default connect(mapStoreToProps)(AboutPage);
+export default AboutPage;

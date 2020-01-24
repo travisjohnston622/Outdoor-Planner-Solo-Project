@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import ReactMapGL from "react-map-gl";
+import ReactMapGL, { Layer } from 'react-map-gl';
+// import ReactMapGL from 'react-map-gl';
 import { Editor, EditorModes } from 'react-map-gl-draw';
 import { connect } from 'react-redux';
 import mapStoreToProps from '../../redux/mapStoreToProps';
 import CustomMarker from '../CustomMarker/CustomMarker';
+
 
 const MAPBOX_TOKEN = process.env.REACT_APP_PUBLIC_MAPBOX_TOKEN;
 
@@ -23,6 +25,30 @@ const DEFAULT_VIEWPORT = {
     zoom: 14
 };
 
+const ROUTE_LAYER_CONFIG = {
+    'id': 'route',
+    'type': 'line',
+    'source': {
+        'type': 'geojson',
+        'data': {
+            'type': 'Feature',
+            'properties': {},
+            'geometry': {
+                'type': 'LineString',
+                'coordinates': []
+            }
+        }
+    },
+    'layout': {
+        'line-join': 'round',
+        'line-cap': 'round'
+    },
+    'paint': {
+        'line-color': '#888',
+        'line-width': 8
+    }
+};
+
 
 class MapBox extends Component {
     state = {
@@ -30,7 +56,9 @@ class MapBox extends Component {
         viewport: DEFAULT_VIEWPORT,
         // Editor
         selectedMode: EditorModes.READ_ONLY,
-        markerArray: []
+        markerArray: [],
+        routeLayerCoordinates: [],
+        // isDrawing: false,
     };
     
     _switchMode = event => {
@@ -48,16 +76,27 @@ class MapBox extends Component {
         });
     };
 
+
     clickMap = event => {
         console.log(event.lngLat);
         console.log('lng: ', event.lngLat[0]);
         console.log('lat: ', event.lngLat[1]);
-        this.setState({
-            markerArray: [
-                ...this.state.markerArray,
-                [event.lngLat[0], event.lngLat[1]]
-            ]
-        })
+        if (this.state.selectedMode === EditorModes.DRAW_POINT) {
+            this.setState({
+                markerArray: [
+                    ...this.state.markerArray,
+                    [event.lngLat[0], event.lngLat[1]]
+                ]
+            })
+        } else if (this.state.selectedMode === EditorModes.DRAW_PATH)
+        {
+            this.setState({
+                routeLayerCoordinates: [
+                    ...this.state.routeLayerCoordinates,
+                    [event.lngLat[0], event.lngLat[1]]
+                ]
+            })
+        }
     }
 
     // markerArray: [[1,2], [2,3], [4,2]]
@@ -84,6 +123,30 @@ class MapBox extends Component {
         );
     };
 
+    clickToDraw = (event) => {
+        this.setState({
+            selectedMode: EditorModes.DRAW_PATH
+        });
+    };
+
+    clickToPoint = (event) => {
+        this.setState({
+            selectedMode: EditorModes.DRAW_POINT
+        });
+    };
+
+    makeRouteLayer() {
+        const newRouteSettings = {
+            ...ROUTE_LAYER_CONFIG,
+        };
+        newRouteSettings.source.geometry.coordinates = [
+            ...this.state.routeLayerCoordinates,
+        ];
+        return newRouteSettings;
+    }
+
+
+    
     render() {
         if(this.props.store.cordReducer.updateNeeded){
             this.forceUpdate();
@@ -95,22 +158,31 @@ class MapBox extends Component {
         })
 
         return (
-            <ReactMapGL
-                {...viewport}
-                width="100vw"
-                height="100vh"
-                mapStyle="mapbox://styles/mapbox/dark-v9"
-                onViewportChange={this.viewportChange}
-                mapboxApiAccessToken={MAPBOX_TOKEN}
-                onClick={this.clickMap}
-            >
-                <Editor
-                    clickRadius={12}
-                    mode={selectedMode}
-                />
-                {this._renderToolbar()}
-                {markerArray}
-            </ReactMapGL>    
+            <div>
+                <div>
+                    <button onClick={this.clickToDraw}>Draw Route</button>
+                    <button onClick={this.clickToPoint}>Add Point</button>
+                </div>
+                <ReactMapGL
+                    {...viewport}
+                    width="50vw"
+                    height="50vh"
+                    mapStyle="mapbox://styles/mapbox/dark-v9"
+                    onViewportChange={this.viewportChange}
+                    mapboxApiAccessToken={MAPBOX_TOKEN}
+                    onClick={this.clickMap}
+                >
+                    <Editor
+                        clickRadius={12}
+                        mode={selectedMode}
+                    />
+                    {markerArray}
+                    {this.state.routeLayerCoordinates.length > 0 && 
+                    <Layer
+                        {...this.makeRouteLayer()}
+                    />}
+                </ReactMapGL>
+            </div>  
         );
     }
 }

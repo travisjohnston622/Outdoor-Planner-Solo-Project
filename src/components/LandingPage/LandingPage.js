@@ -16,12 +16,13 @@ class LandingPage extends Component {
     render() {
         return (
             <div className="container">
-                <h2>{this.state.heading}</h2>
+                <h1>{this.state.heading}</h1>
 
                 <div className="grid">
                     <div className="grid-col grid-col_8">
                         <h4>
-                            Do you have a passion for exploring the great outdoors? If so you are in the right place!
+                            Do you have a passion for exploring the great outdoors? 
+                            If so you are in the right place!
                         </h4>
                     </div>
                     <div className="grid-col grid-col_4">
