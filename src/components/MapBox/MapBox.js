@@ -60,7 +60,10 @@ class MapBox extends Component {
         this.setState({
             viewport: change
         }, () => {
+            this.clickToPoint();
             console.log(change);
+        }, () => {
+            this.clickToDraw();
         });
     };
 
